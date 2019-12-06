@@ -1,0 +1,60 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Dec  6 10:29:01 2019
+
+@author: thomasdyra
+"""
+
+from bs4 import BeautifulSoup 
+import requests
+import time
+import pandas as pd
+
+
+def top_box_office():
+ 
+    url = "https://www.rottentomatoes.com/browse/box-office/"
+    
+    response = requests.get(url)
+    
+    html_doc = response.text
+    
+    soup = BeautifulSoup(html_doc, "lxml")
+    
+    table = soup.find('table', class_='center table')
+    table_rows = table.find_all('tr', class_='alt_row')
+    row =[]
+    for tr in table_rows:
+        td = tr.find_all('td')
+        row.append([i.text for i in td])
+    time.sleep(3)
+
+    return row
+
+
+def create_dataframe(list):
+    for i in list:
+       
+        dataframe_= pd.DataFrame(list[0:], columns=list[0])
+        dataframe_.columns = ['this week', 'lastweek', 't-meter', 'title', 'weeks released','weekend gross','total gross', 'theater avg', '# of theater']
+        
+        
+        
+    return dataframe_
+        
+   
+
+ 
+
+    
+
+    
+    
+
+
+
+x = top_box_office()
+print(x)
+y=create_dataframe(x)
+print(y)
